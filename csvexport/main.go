@@ -9,10 +9,6 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-// Want: {"data":true,"msg":"memorymgmt_changed"}
-//  Followed by: {...,"msg":"memorymgmt_data"} 
-// Error: {..., "msg":"failed_memorymgmt"}
-
 const (
 	DaemonURL = "ws://localhost:30035"
 )
