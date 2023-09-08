@@ -86,22 +86,24 @@ func ParseCSV(filename string) ([]*Credential, error) {
 	for scanner.Scan() {
 		linenr++
 		fields := strings.Split(scanner.Text(), ";")
-		if len(fields) != 4 {
+		if len(fields) < 2 || len(fields) > 4 {
 			return nil, fmt.Errorf("%s:%d: expected 4 fields, got %d", filename, linenr, len(fields))
 		}
 
 		c := &Credential{
-			InService:    Unquote(fields[0]),
-			InLogin:      Unquote(fields[1]),
-			OutDirectory: Unquote(fields[2]),
-			OutFilename:  Unquote(fields[3]),
+			InService: Unquote(fields[0]),
+			InLogin:   Unquote(fields[1]),
 		}
 
-		if len(c.OutDirectory) == 0 {
+		if len(fields) > 3 {
+			c.OutDirectory = Unquote(fields[2])
+		} else {
 			c.OutDirectory = c.InService
 		}
 
-		if len(c.OutFilename) == 0 {
+		if len(fields) == 4 {
+			c.OutFilename = Unquote(fields[3])
+		} else {
 			c.OutFilename = c.InLogin
 		}
 
