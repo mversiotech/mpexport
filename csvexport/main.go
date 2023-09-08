@@ -41,13 +41,13 @@ func main() {
 
 	wsconn, _, err := dialer.Dial(DaemonURL, nil)
 	if err != nil {
-		log.Fatalf("cannot connect to the moolticute daemon: %w\n", err)
+		log.Fatalf("cannot connect to the moolticute daemon: %v\n", err)
 	}
 	defer wsconn.Close()
 
 	msg := []byte(`{"msg":"start_memorymgmt"}`)
 	if err = wsconn.WriteMessage(websocket.TextMessage, msg); err != nil {
-		log.Fatalf("WriteMessage: %w\n", err)
+		log.Fatalf("WriteMessage: %v\n", err)
 	}
 
 	var (
@@ -60,7 +60,7 @@ func main() {
 	for {
 		mtype, data, err := wsconn.ReadMessage()
 		if err != nil {
-			log.Fatalf("ReadMessage: %w\n", err)
+			log.Fatalf("ReadMessage: %v\n", err)
 		}
 
 		if mtype != websocket.TextMessage {
@@ -69,7 +69,7 @@ func main() {
 		}
 
 		if err = json.Unmarshal(data, &header); err != nil {
-			log.Fatalf("Unmarshal header: %w\n", err)
+			log.Fatalf("Unmarshal header: %v\n", err)
 		}
 
 		if header.MessageType == "failed_memorymgmt" {
@@ -82,7 +82,7 @@ func main() {
 			}
 
 			if err = json.Unmarshal(data, &modeChange); err != nil {
-				log.Fatalf("Unmarshal mode change: %w\n", err)
+				log.Fatalf("Unmarshal mode change: %v\n", err)
 			}
 
 			unlocked = modeChange.Unlocked
@@ -94,7 +94,7 @@ func main() {
 		}
 
 		if err = json.Unmarshal(data, &memData); err != nil {
-			log.Fatalf("Unmarshal memory data: %w\n", err)
+			log.Fatalf("Unmarshal memory data: %v\n", err)
 		}
 
 		for _, service := range memData.Data.LoginNodes {
